@@ -1,0 +1,47 @@
+%YAML 1.2
+file_extensions:
+  - csv
+scope: source.example-c
+contexts:
+  main:
+    - match: '#'
+      scope: punctuation.definition.comment.example-c
+      push:
+        - meta_scope: comment.line.double-slash.example-c
+        - match: $\n?
+          pop: true
+    - match: ([^,]*),?
+      scope: keyword.example-c
+      pop: true
+      push:
+        - include: popEOL
+        - match: ([^,]*),?
+          scope: string.example-c
+          pop: true
+          push:
+            - include: popEOL
+            - match: ([^,]*),?
+              scope: entity.name.example-c
+              pop: true
+              push:
+                - include: popEOL
+                - match: ([^,]*),?
+                  scope: variable.function.example-c
+                  pop: true
+                  push:
+                    - include: popEOL
+                    - match: ([^,]*),?
+                      scope: constant.numeric.example-c
+                      pop: true
+  popEOL:
+    - match: $
+      pop: true
+
+# Grey - comment.example-c
+# Red - keyword.example-c
+# Yellow - string.example-c
+# Green - entity.name.example-c
+# Orange - variable.language.example-c
+# Purple - constant.numeric.example-c
+# Blue - variable.function.example-c
+# Invalid - invalid.deprecated.example-c
